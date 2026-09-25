@@ -4,10 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sperlings">
-<meta name="theme-color" content="#0B0E17">
+<meta name="theme-color" content="#1B2B22">
 <title>Sperlings in London</title>
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+.hero{padding-top:calc(var(--s4) + env(safe-area-inset-top,0px))!important;height:calc(clamp(280px,42vh,380px) + env(safe-area-inset-top,0px))!important}
+.strip,.searchbar{scroll-margin-top:env(safe-area-inset-top,0px)}
+.nav{padding-bottom:calc(var(--s3) + env(safe-area-inset-bottom,0px))}</style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -51,6 +56,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 /* ---- trip hero (flat vector London, monotone green) ---- */
 .hero{position:sticky;top:0;z-index:0;height:clamp(280px,42vh,380px);margin:0 auto;max-width:640px;overflow:hidden;display:flex;flex-direction:column;padding:var(--s4) var(--gutter) var(--s6)}
 .hero::after{content:"";position:absolute;inset:0;background:rgba(10,12,20,.55);z-index:0}
+.hero.sketch::after{background:rgba(6,14,10,.25)}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%}
 .hero > *:not(canvas){position:relative;z-index:1}
 .hero h1 span{display:block;white-space:nowrap;width:max-content}
@@ -166,7 +172,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .fab{position:fixed;right:var(--gutter);bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:11;width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .fab svg{width:28px;height:28px;display:block}
 .fab[hidden]{display:none}
-.sheet-cta{position:sticky;bottom:calc(-1 * (var(--s6) + env(safe-area-inset-bottom,0px)));z-index:3;background:var(--card);border-top:1px solid var(--line);margin-top:var(--s6);padding:var(--s4) var(--gutter) calc(var(--s6) + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center}
+.sheet-foot{position:sticky;bottom:calc(-1 * (var(--s6) + env(safe-area-inset-bottom,0px)));z-index:3;background:var(--card);border-top:1px solid var(--line);margin-top:var(--s6);padding:var(--s4) var(--gutter) calc(var(--s6) + env(safe-area-inset-bottom,0px));display:grid;gap:var(--s3)}
+.sheet.full .sheet-foot{background:var(--bg)}
+.sheet-cta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center}
+.sheet-foot:has(.snap) .sheet-cta .btn:not(.sec){background:var(--fill);color:var(--ink)}
+.btn.snap{padding:var(--s4) var(--s5);box-shadow:0 8px 24px rgba(0,0,0,.18)}
 .sheet-cta .btn{padding:var(--s4) var(--s5)}
 .sheet-cta .booked{display:flex;align-items:center;gap:var(--s2);font-weight:700;color:var(--accent-text)}
 .sheet-cta .undo{font-size:14px;font-weight:600;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
@@ -247,6 +257,8 @@ label.btn{cursor:pointer}
 .menu{position:absolute;right:0;top:40px;z-index:5;width:max-content;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.18);padding:var(--s1)}
 .menu button{display:flex;align-items:center;gap:var(--s2);width:100%;white-space:nowrap;padding:var(--s3);border-radius:8px;font-weight:600;color:var(--red)}
 .menu button svg{width:20px;height:20px}
+.menu button.edit{color:var(--ink)}
+.field textarea{font:inherit;font-size:16px;line-height:1.5;padding:var(--s3) var(--s4);border-radius:12px;border:1.5px solid var(--line);background:var(--fill);color:var(--ink);width:100%;resize:vertical}
 .menu[hidden]{display:none}
 .done-btn{display:flex;align-items:center;justify-content:space-between;padding:var(--s3) var(--s4);background:var(--fill);border-radius:12px;font-weight:600;width:100%}
 .done-btn .sw{width:48px;height:28px;border-radius:14px;background:var(--line);position:relative;transition:background .2s}
@@ -312,6 +324,20 @@ label.btn{cursor:pointer}
 @keyframes pulse{50%{transform:scale(1.08)}}
 .onb-people{display:flex;gap:10px}
 @media (prefers-reduced-motion:reduce){.swipe-demo .mini-card,.fab-demo{animation:none}}
+
+/* ---- full-page detail ---- */
+.sheet.full{top:0;bottom:0;height:100%;max-height:none;border-radius:0;box-shadow:none;transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);background:var(--bg);padding-top:env(safe-area-inset-top,0px);z-index:30}
+.sheet.full.on{transform:none}
+.fbar{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;align-items:center;padding:var(--s3) var(--gutter);background:var(--bg)}
+.fx{width:48px;height:48px;border-radius:50%;background:var(--fill);color:var(--ink);display:grid;place-items:center}
+.fmore{position:relative;display:flex}
+.fmore .x{width:48px;height:48px;border-radius:50%}
+.fmore .menu{top:56px}
+.ftitle{padding:var(--s2) var(--gutter) var(--s2)}
+.ftitle h2{font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+.sheet.full .sbody{padding-bottom:var(--s6)}
+.sheet.full .sheet-cta{background:var(--bg)}
+html.noscroll,html.noscroll body{overflow:hidden}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -381,7 +407,7 @@ const DAYS = [
   why:'Flight 6H 115 lands at Luton 16:00. Get home, stock the fridge, see family. Nothing else.',
   stops:[
    {t:'16:00',type:'travel',name:'Land at Luton (LTN)',area:'travel',glyph:'🛬',note:'Bags out by ~16:45. Everyone gets a snack before the train.'},
-   {t:'17:00',type:'travel',name:'Luton → Wembley Park',area:'travel',glyph:'🚆',note:'DART shuttle to Luton Airport Parkway (4 min) → Thameslink to West Hampstead (~35 min) → walk 3 min → Jubilee line 1 stop to Wembley Park. About 1h15 with contactless. A pre-booked taxi is ~50 min if the kid is wiped out.',web:'https://www.thameslinkrailway.com',links:[['Maps',maps('West Hampstead Thameslink')]]},
+   {t:'17:18',type:'travel',name:'Luton → Wembley Park (EMR)',area:'travel',glyph:'🚆',note:'DART shuttle to Luton Airport Parkway (4 min) → EMR 17:18 to London St Pancras, arrives 17:53 (35 min). Walk through to King’s Cross St Pancras Underground → Metropolitan line direct to Wembley Park (~15 min). Home around 18:20.',web:'https://www.eastmidlandsrailway.co.uk',links:[['Maps',maps('London St Pancras International')]]},
    {t:'18:30',type:'sight',name:'Tesco Express, Wembley Park Blvd',area:'wembley',glyph:'🛒',hours:'Daily 07:00–23:00',ticket:'walk',dur:'20 min',addr:'Unit 3, 20 Wembley Park Blvd, HA9 0HP · 8 min walk from home',note:'Milk, bread, fruit, breakfast for tomorrow. The big Tesco Extra is on the Home tab.',web:'https://www.tesco.com/store-locator/london/unit-3-20-wembley-park-blvd'},
    {t:'19:30',type:'food',name:'Dinner at wagamama Wembley',area:'wembley',glyph:'🍜',hours:'Wed 11:00–22:00',ticket:'table',price:'Mains ~£12–17 · kids menu from ~£7',dur:'1h',addr:'104 London Designer Outlet, Wembley Park Blvd, HA9 0FD · 10 min walk',note:'Easy first-night dinner: ramen, katsu curry, gyoza, kids menu. Walk-ins usually fine midweek; booking same day on OpenTable if you want to be sure. Early night; tomorrow starts at 9.',web:'https://www.wagamama.com/restaurants/london/wembley'}
   ]},
@@ -578,6 +604,7 @@ const ILL={
   book:'<svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zm11 0h1.5v1.8H14zm0 3.1h1.5v1.8H14zm0 3.1h1.5V16H14z"/></svg>'
 };
 const ICON={
+  pencil:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
   camera:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h1.5l1.2-1.6A1 1 0 0 1 9.5 4h5a1 1 0 0 1 .8.4L16.5 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg>',
   smile:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><circle cx="9" cy="10" r=".6" fill="currentColor"/><circle cx="15" cy="10" r=".6" fill="currentColor"/></svg>',
   dots:'<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>',
@@ -617,6 +644,21 @@ async function upsert(path,patch){if(!SH.db)return;const ref=SH.db.doc(path);
   try{await ref.update(patch);}catch(e){if(e&&e.code==='invalid_argument'){try{const s=await ref.get();if(!s.exists){await ref.set(patch);return;}}catch(e2){}}throw e;}}
 function denied(e,what){if(e&&e.code==='invalid_argument'){toast(what);}else if(e&&e.code==='unavailable'){toast('Offline for a moment. Try again.');}}
 store.photos=store.photos||{};
+const ORIG={};DAYS.forEach((dd,di)=>dd.stops.forEach((s,si)=>{ORIG[`d${di}s${si}`]={t:s.t,name:s.name,note:s.note};}));
+store.edits=store.edits||{};
+function applyEdits(){DAYS.forEach((dd,di)=>dd.stops.forEach((s,si)=>{const k=`d${di}s${si}`,o=ORIG[k],e=store.edits[k]||{};s.t=e.t||o.t;s.name=e.name||o.name;s.note=(e.note!=null&&e.note!=='')?e.note:o.note;}));}
+applyEdits();
+function saveEdit(k,e){store.edits[k]=e;save();applyEdits();if(SH.db)upsert('shared/edits',{edits:{[k]:e}}).catch(err=>denied(err,'Could not save the change.'));}
+function openEdit(di,si){const s=DAYS[di].stops[si],k=`d${di}s${si}`;
+  $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>Edit stop</h2><button class="x" data-close aria-label="Close">✕</button></div>
+   <div class="sbody"><div class="field"><label for="edT">Time</label><input id="edT" value="${esc(s.t)}" autocomplete="off"></div>
+   <div class="field"><label for="edN">Title</label><input id="edN" value="${esc(s.name)}" autocomplete="off"></div>
+   <div class="field"><label for="edD">${s.type==='travel'?'Directions':'Notes'}</label><textarea id="edD" rows="6">${esc(s.note||'')}</textarea></div>
+   <button class="btn" id="edSave">Save</button>${store.edits[k]?'<button class="btn sec" id="edReset">Undo my changes</button>':''}</div>`;
+  showSheet();
+  $('edSave').addEventListener('click',()=>{saveEdit(k,{t:$('edT').value.trim(),name:$('edN').value.trim(),note:$('edD').value.trim()});closeSheet();rerender();toast('Saved for everyone');});
+  const r=$('edReset');if(r)r.addEventListener('click',()=>{saveEdit(k,{t:'',name:'',note:''});closeSheet();rerender();toast('Back to the original');});
+}
 async function shrink(file,max){const url=URL.createObjectURL(file);try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
   const s=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
   let q=.72,d=c.toDataURL('image/jpeg',q);while(d.length>230000&&q>.3){q-=.12;d=c.toDataURL('image/jpeg',q);}return d;}finally{URL.revokeObjectURL(url);}}
@@ -627,7 +669,7 @@ function openProof(key,label){
    <label class="btn" id="proofCam">${ICON.camera} Open the camera<input type="file" accept="image/*" capture="environment" id="proofIn" hidden></label>
    <label class="btn sec" id="proofLib">Choose from photos<input type="file" accept="image/*" id="proofIn2" hidden></label>
    <div id="proofMsg" class="note" style="margin:0" hidden></div></div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');$('sheet').scrollTop=0;
+  showSheet();$('sheet').scrollTop=0;
   const onFile=async e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const msg=$('proofMsg');msg.hidden=false;msg.textContent='Saving your photo…';
     try{const d=await shrink(f,900);$('proofPrev').hidden=false;$('proofPrev').style.backgroundImage=`url(${d})`;
       const rec={img:d,who:who(),at:Date.now()};store.photos[key]=rec;
@@ -643,7 +685,23 @@ function restoreAll(){store.removed={};refreshCustom();save();if(SH.db)SH.db.doc
 function addCustom(o){const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);const rec=Object.assign({id,at:Date.now(),by:SH.me||null,who:who()},o);
   store.customAll.push(rec);refreshCustom();save();
   if(SH.db){const body={name:rec.name,area:rec.area||null,day:rec.day,at:rec.at,by:rec.by,who:rec.who||null};SH.db.doc('places/'+id).set(body).catch(e=>denied(e,'You can look but not change this trip.'));}
+  attachPhoto(rec);
   return rec;}
+// ---------- photo lookup for added places (Wikipedia / Wikimedia Commons, free & CORS-friendly) ----------
+const photoTried={};
+async function findPhoto(name){
+  const q=encodeURIComponent(name+' London');
+  try{const r=await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${q}&gsrlimit=4&prop=pageimages|info&inprop=url&piprop=thumbnail&pithumbsize=800`).then(x=>x.json());
+    const ps=Object.values((r.query&&r.query.pages)||{}).sort((a,b)=>a.index-b.index);
+    const hit=ps.find(p=>p.thumbnail&&p.thumbnail.width>=p.thumbnail.height*.9);if(hit)return {url:hit.thumbnail.source,page:hit.fullurl,src:'Wikipedia'};}catch(e){}
+  try{const r=await fetch(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${q}%20filetype:bitmap&gsrlimit=6&prop=imageinfo&iiprop=url|size&iiurlwidth=800`).then(x=>x.json());
+    const ps=Object.values((r.query&&r.query.pages)||{}).sort((a,b)=>a.index-b.index);
+    for(const p of ps){const ii=p.imageinfo&&p.imageinfo[0];if(ii&&ii.width>=ii.height)return {url:ii.thumburl||ii.url,page:ii.descriptionurl,src:'Wikimedia Commons'};}}catch(e){}
+  return null;}
+async function attachPhoto(rec){if(!rec||rec.img||photoTried[rec.id])return;photoTried[rec.id]=1;
+  const ph=await findPhoto(rec.name);if(!ph)return;
+  rec.img=ph.url;rec.imgPage=ph.page;save();rerender();
+  if(SH.db){try{await upsert('places/'+rec.id,{img:ph.url,imgPage:ph.page});}catch(e){}}}
 let _rr=0;function rerender(){cancelAnimationFrame(_rr);_rr=requestAnimationFrame(()=>{try{renderDay(typeof store.day==='number'?store.day:0);if(!$('panel-places').hidden)renderPlaces();if(!$('panel-book').hidden)renderBook();renderHome();applySearch();}catch(e){}});}
 async function connectShared(){
   if(window.FB_CONFIG&&window.firebase){
@@ -658,16 +716,14 @@ async function connectShared(){
   SH.user=user;
   if(user){SH.admin=await user.canEdit();const w=await user.can('data.write');SH.write=w;SH.me=await user.id();SH.owner=await user.isOwner();if(SH.admin===false&&w===null)SH.admin=null;}
   if(!db){rerender();return;}
-  return startSync(db);
-}
-function startSync(db){
   SH.db=db;SH.live=true;
   let first={marks:true,removed:true,places:true};
   db.doc('shared/marks').onSnapshot(s=>{const m=(s.exists&&s.data().marks)||{};Object.keys(store).forEach(k=>{if(MARK_RE.test(k))delete store[k];});Object.entries(m).forEach(([k,v])=>{if(v)store[k]=true;});save();
     if(first.marks){first.marks=false;SH.emptyMarks=!s.exists;maybeOfferImport();}rerender();},()=>{});
   db.doc('locked/removed').onSnapshot(s=>{const m=(s.exists&&s.data().keys)||{};store.removed={};Object.entries(m).forEach(([k,v])=>{if(v)store.removed[k]=true;});refreshCustom();save();rerender();},()=>{});
+  db.doc('shared/edits').onSnapshot(s=>{store.edits=(s.exists&&s.data().edits)||{};save();applyEdits();rerender();},()=>{});
   db.collection('photos').onSnapshot(q=>{store.photos={};q.docs.forEach(d=>{store.photos[d.id]=d.data();});rerender();},()=>{});
-  db.collection('places').orderBy('at').onSnapshot(q=>{store.customAll=q.docs.map(d=>Object.assign({id:d.id},d.data()));refreshCustom();save();
+  db.collection('places').orderBy('at').onSnapshot(q=>{store.customAll=q.docs.map(d=>Object.assign({id:d.id},d.data()));refreshCustom();save();store.customAll.forEach(c=>{if(!c.img)attachPhoto(c);});
     if(first.places){first.places=false;SH.emptyPlaces=q.empty;maybeOfferImport();}rerender();},()=>{});
 }
 function maybeOfferImport(){
@@ -678,7 +734,7 @@ function maybeOfferImport(){
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>Share what's on this phone?</h2><button class="x" data-close aria-label="Close">✕</button></div>
    <div class="sbody"><p class="note" style="margin:0">You have ${marks.length} ticks, ${places.length} added places and ${rem.length} removed places saved on this phone from before. Share them so the family sees them too?</p>
    <button class="btn" id="impGo">Share them</button><button class="btn sec" data-close>Start fresh</button></div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');
+  showSheet();
   $('impGo').addEventListener('click',async()=>{closeSheet();
     try{if(marks.length){const m={};marks.forEach(k=>m[k]=true);await SH.db.doc('shared/marks').set({marks:m});}
       if(rem.length){const k={};rem.forEach(x=>k[x]=true);await SH.db.doc('locked/removed').set({keys:k});}
@@ -748,7 +804,7 @@ const $ = id => document.getElementById(id);
     ctx.fillStyle=CREAM;ctx.fillRect(x0+bw2*.45,y0+bh-14,bw2*.12,8);
     circ(x0+bw2*.93,y0+bh-22,6,GLASS);
   }
-  draw(); window.addEventListener('resize',draw); window.redrawHero=draw;
+  window.drawFlatHero=draw;
 })();
 
 // theme toggle
@@ -760,6 +816,64 @@ const $ = id => document.getElementById(id);
   b.addEventListener('click',()=>{const dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);const v=dark?'light':'dark';try{localStorage.setItem('ldo-theme',v)}catch(e){};apply(v);});
 })();
 document.querySelectorAll('.nav [data-tab]').forEach(b=>{const k=b.dataset.tab;b.innerHTML=`<span class="ic-s">${NAV[k][0]}</span><span class="ic-f">${NAV[k][1]}</span><span class="sr">${b.getAttribute('aria-label')}</span>`;});
+
+// ---------- hero: hand-drawn ink London (current) ----------
+// Switch back to the flat illustration by setting HERO_STYLE = 'flat'.
+const HERO_STYLE='sketch';
+(function sketchHero(){
+  const c=$('skyline'); const ctx=c.getContext('2d');
+  function isDark(){const a=document.documentElement.getAttribute('data-theme');return a==='dark'||(!a&&matchMedia('(prefers-color-scheme: dark)').matches);}
+  let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+  const j=(a)=>(rnd()-.5)*a;
+  function ln(x1,y1,x2,y2,w){const mx=(x1+x2)/2+j(2.2),my=(y1+y2)/2+j(2.2);
+    ctx.lineWidth=w||1.7;ctx.beginPath();ctx.moveTo(x1+j(1),y1+j(1));ctx.quadraticCurveTo(mx,my,x2+j(1),y2+j(1));ctx.stroke();
+    if(rnd()<.35){ctx.lineWidth=(w||1.7)*.6;ctx.beginPath();ctx.moveTo(x1+j(1.5),y1+j(1.5));ctx.lineTo(x2+j(1.5),y2+j(1.5));ctx.stroke();}}
+  function rect(x,y,w,h,lw){ln(x,y,x+w,y,lw);ln(x+w,y,x+w,y+h,lw);ln(x+w,y+h,x,y+h,lw);ln(x,y+h,x,y,lw);}
+  function circ(cx,cy,r,lw){ctx.lineWidth=lw||1.7;ctx.beginPath();for(let k=0;k<=40;k++){const a=k/40*Math.PI*2,rr=r+j(1.2);const px=cx+Math.cos(a)*rr,py=cy+Math.sin(a)*rr;k?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();}
+  function wins(x,y,cols,rows,dx,dy,w,hh){for(let r=0;r<rows;r++)for(let q=0;q<cols;q++){if(rnd()<.15)continue;rect(x+q*dx,y+r*dy,w,hh,1.1);}}
+  function draw(){
+    if(HERO_STYLE!=='sketch'){window.drawFlatHero&&window.drawFlatHero();return;}
+    seed=7;
+    const r=Math.min(devicePixelRatio||1,2),cw=c.clientWidth,ch=c.clientHeight;c.width=cw*r;c.height=ch*r;ctx.setTransform(r,0,0,r,0,0);
+    const dark=isDark(),BG=dark?'#0C2016':'#1F4A34',INK=dark?'#A8D9BC':'#E3F4E9',SOFT=dark?'rgba(168,217,188,.35)':'rgba(227,244,233,.4)';
+    ctx.fillStyle=BG;ctx.fillRect(0,0,cw,ch);ctx.strokeStyle=INK;ctx.lineCap='round';ctx.lineJoin='round';
+    const W=cw,H=ch,s=Math.min(W/400,1.6),base=H*.9;
+    const X=f=>W*f;
+    // river
+    ctx.strokeStyle=SOFT;for(let k=0;k<3;k++){ctx.lineWidth=1.2;ctx.beginPath();for(let x=0;x<=W;x+=8){const y=base+8+k*6+Math.sin(x/14+k)*1.6;x?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();}
+    ctx.strokeStyle=INK;
+    ln(0,base,W,base,1.8);
+    // Tower Bridge (left)
+    const tb=X(.03),tw=34*s,th=110*s,gap=46*s;
+    [tb,tb+tw+gap].forEach(x=>{rect(x,base-th,tw,th);ln(x-3*s,base-th,x+tw/2,base-th-22*s);ln(x+tw/2,base-th-22*s,x+tw+3*s,base-th);
+      ln(x+tw/2,base-th-22*s,x+tw/2,base-th-32*s,1.2);wins(x+6*s,base-th+14*s,2,3,12*s,22*s,6*s,11*s);ln(x,base-18*s,x+tw,base-18*s,1.2);});
+    rect(tb+tw,base-th+10*s,gap,9*s,1.4);ln(tb+tw,base-34*s,tb+tw+gap,base-34*s);
+    ln(0,base-60*s,tb,base-34*s,1.3);ln(tb+2*tw+gap,base-34*s,X(.36),base-58*s,1.3);
+    // The Shard
+    const sx=X(.38);ln(sx,base,sx+26*s,base-190*s);ln(sx+26*s,base-190*s,sx+52*s,base);ln(sx+26*s,base-190*s,sx+22*s,base,1);
+    for(let k=1;k<6;k++){const yy=base-k*30*s,off=k*30*s*26/190;ln(sx+off,yy,sx+52*s-off,yy,.9);}
+    // St Paul's dome
+    const px=X(.52);rect(px,base-58*s,70*s,58*s);wins(px+8*s,base-48*s,4,2,15*s,22*s,7*s,12*s);
+    ctx.lineWidth=1.7;ctx.beginPath();ctx.arc(px+35*s,base-58*s,26*s,Math.PI,0);ctx.stroke();ln(px+35*s,base-84*s,px+35*s,base-104*s);circ(px+35*s,base-106*s,3*s,1.4);
+    for(let k=-2;k<=2;k++)ln(px+35*s+k*10*s,base-58*s,px+35*s+k*6*s,base-80*s,.9);
+    // Big Ben
+    const bx=X(.72),bw=30*s,bh=170*s;rect(bx,base-bh,bw,bh);rect(bx-3*s,base-bh-34*s,bw+6*s,34*s);circ(bx+bw/2,base-bh-17*s,11*s,1.6);
+    ln(bx+bw/2,base-bh-17*s,bx+bw/2+6*s,base-bh-23*s,1.3);ln(bx+bw/2,base-bh-17*s,bx+bw/2-4*s,base-bh-12*s,1.3);
+    ln(bx-3*s,base-bh-34*s,bx+bw/2,base-bh-70*s);ln(bx+bw/2,base-bh-70*s,bx+bw+3*s,base-bh-34*s);ln(bx+bw/2,base-bh-70*s,bx+bw/2,base-bh-84*s,1.2);
+    for(let k=0;k<6;k++)ln(bx+6*s,base-bh+20*s+k*24*s,bx+bw-6*s,base-bh+20*s+k*24*s,.9);
+    for(let k=0;k<3;k++)ln(bx+8*s+k*7*s,base-bh+8*s,bx+8*s+k*7*s,base-18*s,.8);
+    // Parliament arches between St Paul's and Big Ben
+    const ax=px+70*s;ln(ax,base-40*s,bx,base-40*s,1.3);for(let x=ax+4*s;x<bx-8*s;x+=14*s){ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(x+6*s,base,6*s,Math.PI,0);ctx.stroke();ln(x+6*s,base-40*s,x+6*s,base-48*s,.9);}
+    // London Eye (right)
+    const ex=X(.9),ey=base-70*s,er=58*s;circ(ex,ey,er,1.8);circ(ex,ey,5*s,1.3);
+    for(let k=0;k<12;k++){const a=k/12*Math.PI*2;ln(ex,ey,ex+Math.cos(a)*er,ey+Math.sin(a)*er,.8);circ(ex+Math.cos(a)*er,ey+Math.sin(a)*er,3*s,1.1);}
+    ln(ex,ey,ex-24*s,base,1.5);ln(ex,ey,ex+24*s,base,1.5);
+    // birds
+    [[.14,.2],[.24,.14],[.34,.22]].forEach(([fx,fy])=>{const bx2=W*fx,by=H*fy;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(bx2-8,by);ctx.quadraticCurveTo(bx2-4,by-6,bx2,by);ctx.quadraticCurveTo(bx2+4,by-6,bx2+8,by);ctx.stroke();});
+  }
+  draw(); window.addEventListener('resize',draw); window.redrawHero=draw;
+  document.getElementById('hero').classList.toggle('sketch',HERO_STYLE==='sketch');
+})();
 // countdown
 (function(){
   const start=new Date(2026,8,30), end=new Date(2026,9,11), now=new Date(); const d=Math.ceil((start-now)/864e5);
@@ -796,7 +910,7 @@ function rowHTML(s,di,si){
   const tileStyle='';
   const canDone=s.type!=='travel';
   const btn=`<button class="row-item ${s.type} ${done?'is-done':''} ${canDone?'swipe-front':''}" data-open="${di}:${si}" id="r-${id}" ${canDone?`data-swipe="${id}" data-kind="stop"`:''}>
-    ${(()=>{const pr=done&&store.photos&&store.photos[id];if(pr)return `<span class="tile photo mine" style="background-image:url(${pr.img})"></span>`;const ph=di!=='c'&&PHOTOS[di+':'+si];return ph?`<span class="tile photo" style="background-image:url(${ph.d})"></span>`:`<span class="tile">${s.glyph}</span>`;})()}
+    ${(()=>{const pr=done&&store.photos&&store.photos[id];if(pr)return `<span class="tile photo mine" style="background-image:url(${pr.img})"></span>`;if(di==='c'&&s.img)return `<span class="tile photo" style="background-image:url(${esc(s.img)})"></span>`;const ph=di!=='c'&&PHOTOS[di+':'+si];return ph?`<span class="tile photo" style="background-image:url(${ph.d})"></span>`:`<span class="tile">${s.glyph}</span>`;})()}
     <span><div class="tt">${esc(s.name)}</div><div class="st">${sub}</div></span>
     <span class="tm">${esc(s.t)}<span class="chev">›</span></span></button>`;
   return `<div class="swipe">${canDone?`<div class="swipe-act">${done?'Undo':'Done ✓'}</div>`:''}${btn}</div>`;
@@ -841,6 +955,7 @@ $('sheet').addEventListener('click',e=>{
   const pf=e.target.closest('[data-proof]'); if(pf){openProof(pf.dataset.proof,pf.dataset.label);return;}
   const m=e.target.closest('[data-more]'); if(m){const menu=m.parentElement.querySelector('.menu');menu.hidden=!menu.hidden;return;}
   const r=e.target.closest('[data-rm-sheet]'); if(r){confirmRemove(r.dataset.rmSheet);return;}
+  const ed=e.target.closest('[data-edit]'); if(ed){const [a,b]=ed.dataset.edit.split(':').map(Number);closeSheet();setTimeout(()=>openEdit(a,b),340);return;}
   const open=$('sheet').querySelector('.menu:not([hidden])'); if(open&&!e.target.closest('.menu'))open.hidden=true;
 });
 $('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-booked]');if(!b)return;const key=b.dataset.booked;if(store[key]&&!canUndo())return;setMark(key,!store[key]);
@@ -856,10 +971,9 @@ function openSheet(di,si){
   if(s.hours) kv.push(['Open',s.hours]); if(s.price) kv.push(['Cost',s.price]); if(s.dur) kv.push(['Time needed',s.dur]); if(s.addr) kv.push(['Where',s.addr]);
   kv.push(['When',`${d.wd} ${d.date} ${MON(d.date)} · ${s.t}`]);
   $('sheet').innerHTML = `<div class="handle"></div>
-   <div class="sh"><h2>${s.web?`<a class="namelink" target="_blank" rel="noopener" href="${esc(s.web)}">${esc(s.name)}</a>`:esc(s.name)}</h2><div class="more-wrap">${s.type!=='travel'&&!s.private&&canRemove()?`<button class="x" data-more aria-label="More options" aria-haspopup="menu">${ICON.dots}</button><div class="menu" role="menu" hidden><button role="menuitem" data-rm-sheet="${di}:${si}">${ICON.trash}Remove from itinerary</button></div>`:''}<button class="x" data-close aria-label="Close">✕</button></div></div>
+   <div class="sh"><h2>${s.web?`<a class="namelink" target="_blank" rel="noopener" href="${esc(s.web)}">${esc(s.name)}</a>`:esc(s.name)}</h2><div class="more-wrap">${canRemove()?`<button class="x" data-more aria-label="More options" aria-haspopup="menu">${ICON.dots}</button><div class="menu" role="menu" hidden><button role="menuitem" class="edit" data-edit="${di}:${si}">${ICON.pencil}Edit ${s.type==='travel'?'directions':'details'}</button>${s.type!=='travel'&&!s.private?`<button role="menuitem" data-rm-sheet="${di}:${si}">${ICON.trash}Remove from itinerary</button>`:''}</div>`:''}<button class="x" data-close aria-label="Close">✕</button></div></div>
    <div class="sbody">
     ${(()=>{const pr=store[id]&&store.photos&&store.photos[id];return pr?`<div class="proof-card"><div class="proof-img" style="background-image:url(${pr.img})"></div><div class="note" style="margin:0">✓ Done${pr.who&&PEOPLE[pr.who]?` · photo by ${PEOPLE[pr.who].name}`:''}</div></div>`:'';})()}
-    ${s.type!=='travel'&&!store[id]&&canWrite()?`<button class="btn sec" data-proof="${id}" data-label="${esc(s.name)}">${ICON.camera} Take a photo to mark done</button>`:''}
     ${(()=>{if(!(s.type==='sight'||s.type==='food'))return '';const ph=PHOTOS[di+':'+si];return ph?`<div class="cover photo" style="background-image:url(${ph.d})"><span class="g"></span><span class="a">${esc(a.label)}</span></div><div class="credit">Photo: <a target="_blank" rel="noopener" href="${esc(ph.p)}">${esc(ph.a||'Wikimedia Commons')}</a>${ph.l?' · '+esc(ph.l):''} · Wikimedia Commons</div>`:`<div class="cover" style="background:${a.p}"><span class="g">${s.glyph}</span><span class="a">${esc(a.label)}</span></div>`;})()}
     ${tk?`<div><span class="tag ${tk[0]}" style="font-size:12px;padding:var(--s1) var(--s2)">${tk[1]}</span></div>`:''}
     ${s.type!=='travel'?`<div class="actions">
@@ -876,10 +990,35 @@ function openSheet(di,si){
       ${(s.links||[]).map(l=>`<a target="_blank" rel="noopener" href="${esc(l[1])}">${esc(l[0])}</a>`).join('')}
     </div>`:''}
 
-   </div>${needsBooking(s)?ctaHTML(s,di,si):''}`;
-  $('sheet').classList.add('on'); $('backdrop').classList.add('on'); $('sheet').scrollTop=0;
+   </div>${(()=>{const book=needsBooking(s)?ctaHTML(s,di,si):'';const snap=s.type!=='travel'&&!store[id]&&canWrite()?`<button class="btn snap" data-proof="${id}" data-label="${esc(s.name)}">${ICON.camera} Take a photo to mark done</button>`:'';return book||snap?`<div class="sheet-foot">${book}${snap}</div>`:'';})()}`;
+  showSheet(true); $('sheet').scrollTop=0;
 }
-function closeSheet(){if($('sheet').dataset.forced==='1')return;$('sheet').classList.remove('on');$('backdrop').classList.remove('on');}
+let fullY=0,fullOpen=false;
+const XBIG='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+function showSheet(full){
+  const sh=$('sheet');
+  if(full){
+    if(!fullOpen){fullY=window.scrollY;fullOpen=true;try{history.pushState({sp:'detail'},'');}catch(e){}}
+    sh.classList.add('full');
+    const hd=sh.querySelector('.sh');
+    if(hd){const x=hd.querySelector('[data-close]');const more=hd.querySelector('.more-wrap');const h2=hd.querySelector('h2');
+      const bar=document.createElement('div');bar.className='fbar';
+      const xb=document.createElement('button');xb.className='fx';xb.setAttribute('data-close','');xb.setAttribute('aria-label','Close');xb.innerHTML=XBIG;bar.appendChild(xb);
+      if(more){if(x&&more.contains(x))x.remove();more.classList.add('fmore');bar.appendChild(more);}
+      const th=document.createElement('div');th.className='ftitle';if(h2)th.appendChild(h2);
+      hd.replaceWith(bar);bar.after(th);}
+    const hn=sh.querySelector('.handle');if(hn)hn.remove();
+    document.documentElement.classList.add('noscroll');
+  }else{
+    if(fullOpen){fullOpen=false;document.documentElement.classList.remove('noscroll');}
+    sh.classList.remove('full');$('backdrop').classList.add('on');
+  }
+  sh.classList.add('on');sh.scrollTop=0;
+}
+function closeSheet(fromPop){if($('sheet').dataset.forced==='1')return;const sh=$('sheet');const wasFull=sh.classList.contains('full');
+  sh.classList.remove('on');$('backdrop').classList.remove('on');
+  if(wasFull){document.documentElement.classList.remove('noscroll');fullOpen=false;window.scrollTo(0,fullY);if(!fromPop){try{if(history.state&&history.state.sp)history.back();}catch(e){}}setTimeout(()=>{if(!sh.classList.contains('on'))sh.classList.remove('full');},320);}}
+window.addEventListener('popstate',()=>{if($('sheet').classList.contains('on')&&$('sheet').classList.contains('full'))closeSheet(true);});
 $('backdrop').addEventListener('click',closeSheet);
 $('sheet').addEventListener('click',e=>{
   if(e.target.closest('[data-close]')) return closeSheet();
@@ -891,11 +1030,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
 $('panel-plan').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(!b)return;const [di,si]=b.dataset.open.split(':');if(di==='c')return openCustom(+si);openSheet(+di,+si);});
 
 // ---------- custom places ----------
-const KEYS={wembley:['wembley'],west:['westfield','white city','shepherd','holland park','notting hill','portobello','kensington high'],greenwich:['greenwich','o2','cutty sark'],richmond:['richmond','kew','twickenham','petersham'],hampstead:['hampstead','golders','camden','primrose','highgate'],marylebone:['marylebone','baker street','regent','chiltern','oxford street','sherlock'],sussex:['sussex','brighton','eastbourne','seaford','seven sisters'],westminster:['westminster','big ben','trafalgar','whitehall','buckingham','st james','victoria','parliament'],soho:['soho','chinatown','leicester','piccadilly','carnaby','oxford circus'],coventgarden:['covent','strand','somerset house','neal'],kensington:['south kensington','museum','knightsbridge','hyde park','harrods','chelsea','albert'],nottingham:['nottingham'],city:['bank','monument','st paul','barbican','tower of london','tower bridge','liverpool street','bishopsgate','leadenhall','sky garden','gherkin'],east:['shoreditch','stratford','olympic','hackney','brick lane','spitalfields','boxpark','columbia road'],borough:['borough','london bridge','southwark','tate','south bank','southbank','bankside','waterloo','shard','london eye']};
+const KEYS={wembley:['wembley'],west:['westfield','white city','shepherd','holland park','notting hill','portobello','kensington high'],greenwich:['greenwich','o2','cutty sark'],richmond:['richmond','kew','twickenham','petersham'],hampstead:['hampstead','golders','camden','primrose','highgate'],marylebone:['marylebone','baker street','regent','chiltern','oxford street','sherlock'],sussex:['sussex','brighton','eastbourne','seaford','seven sisters'],westminster:['westminster','big ben','trafalgar','whitehall','buckingham','st james','victoria','parliament'],soho:['soho','chinatown','leicester','piccadilly','carnaby','oxford circus'],coventgarden:['dishoom','covent','strand','somerset house','neal'],kensington:['south kensington','museum','knightsbridge','hyde park','harrods','chelsea','albert'],nottingham:['nottingham'],city:['bank','monument','st paul','barbican','tower of london','tower bridge','liverpool street','bishopsgate','leadenhall','sky garden','gherkin'],east:['shoreditch','stratford','olympic','hackney','brick lane','spitalfields','boxpark','columbia road'],borough:['borough','london bridge','southwark','tate','south bank','southbank','bankside','waterloo','shard','london eye']};
 store.custom=store.custom||[];
 function guessArea(name){const n=name.toLowerCase();for(const [k,ws] of Object.entries(KEYS)){if(ws.some(w=>n.includes(w)))return k;}return null;}
 function dayForArea(k){let i=DAYS.findIndex(d=>d.area===k);if(i<0)i=DAYS.findIndex(d=>d.stops.some(s=>s.area===k));return i;}
-function customStop(c){return {t:'Flexible',type:'sight',name:c.name,area:c.area||'travel',glyph:'📌',ticket:'walk',note:'Added by you. Slot it wherever it fits on the day.',custom:true};}
+function customStop(c){return {img:c.img||null,t:'Flexible',type:'sight',name:c.name,area:c.area||'travel',glyph:'📌',ticket:'walk',note:'Added by you. Slot it wherever it fits on the day.',custom:true};}
 function isRemoved(di,si){return !!(store.removed&&store.removed[di+':'+si]);}
 function dayStops(i){const base=DAYS[i].stops.map((s,si)=>Object.assign({},s,{_si:si})).filter(s=>!isRemoved(i,s._si));const extra=store.custom.map((c,ci)=>c.day===i?Object.assign(customStop(c),{_ci:ci}):null).filter(Boolean);if(!extra.length)return base;const last=base.length-1;base.splice(base[last].type==='travel'?last:base.length,0,...extra);return base;}
 function openAdd(){
@@ -907,7 +1046,7 @@ function openAdd(){
     <button class="btn" id="addGo">Add to my itinerary</button>
     <button class="btn sec" id="addOnly">Just keep it in Explore</button>
    </div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');$('sheet').scrollTop=0;
+  showSheet();$('sheet').scrollTop=0;
   let picked='';
   $('addAreas').addEventListener('click',e=>{const b=e.target.closest('[data-area]');if(!b)return;picked=b.dataset.area;$('addAreas').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});
   const commit=(toPlan)=>{
@@ -927,11 +1066,11 @@ function openAdd(){
 function openCustom(ci){
   const c=store.custom[ci]; const a=AREA[c.area]||AREA.travel; const d=c.day>=0?DAYS[c.day]:null;
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>${esc(c.name)}</h2><button class="x" data-close aria-label="Close">✕</button></div>
-   <div class="sbody"><div class="cover" style="background:${a.p}"><span class="g">📌</span><span class="a">${esc(a.label)}</span></div>
+   <div class="sbody">${c.img?`<div class="cover photo" style="background-image:url(${esc(c.img)})"><span class="g"></span><span class="a">${esc(a.label)}</span></div>${c.imgPage?`<div class="credit">Photo: <a target="_blank" rel="noopener" href="${esc(c.imgPage)}">Wikimedia</a></div>`:''}`:`<div class="cover" style="background:${a.p}"><span class="g">📌</span><span class="a">${esc(a.label)}</span></div>`}
     <div class="group" style="margin:0"><div class="kv"><span class="k">When</span><span class="v">${d?`${d.wd} ${d.date} ${MON(d.date)} · flexible`:'Not on the plan'}</span></div></div>
     <div class="actions"><a target="_blank" rel="noopener" href="${esc(dirs(c.name+' London'))}"><span class="ic">${ICON.compass}</span>Directions</a><a target="_blank" rel="noopener" href="${esc(maps(c.name+' London'))}"><span class="ic">${ICON.pin}</span>Map</a></div>
     ${canRemove()?`<button class="btn sec" data-remove="${ci}">Remove this place</button>`:''}</div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');
+  showSheet(true);
 }
 $('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-remove]');if(!b)return;const c=store.custom[+b.dataset.remove];if(!c)return;setRemoved('c:'+c.id,true);closeSheet();renderPlaces();if(c.day>=0)renderDay(c.day);});
 
@@ -948,7 +1087,7 @@ function renderPlaces(){
   $('panel-places').innerHTML = `<div class="section"><h2>Explore</h2><p class="lead">Every place on the trip, by type. Tap for details, or ＋ to add one.</p>
    <div class="chips"><button class="chipx acid" data-filter="all">All</button><button class="chipx" data-filter="See & do">See & do</button><button class="chipx" data-filter="Eat & drink">Eat & drink</button></div>
    ${Object.entries(groups).map(([k,arr])=>`<div data-group="${k}"><div class="upper" style="margin:var(--s2) 0 var(--s3)">${k}</div><div class="pgrid">${arr.map(({s,di,si,d})=>{const a=AREA[s.area]||AREA.travel;const ph=PHOTOS[di+':'+si];return placeCard(di+':'+si,s.name,`${d.wd} ${d.date} · ${esc(a.label)}`,ph&&ph.d,s.glyph,a.p);}).join('')}</div></div>`).join('')}
-   ${store.custom.length?`<div><div class="upper" style="margin:var(--s2) 0 var(--s3)">Added by you</div><div class="pgrid">${store.custom.map((c,ci)=>{const a=AREA[c.area]||AREA.travel;const d=c.day>=0?DAYS[c.day]:null;return placeCard('c:'+ci,c.name,`${d?`${d.wd} ${d.date} · `:'Not placed · '}${esc(a.label)}${c.who&&PEOPLE[c.who]?` · by ${PEOPLE[c.who].name}`:(c.by?` · <span data-uid="${esc(c.by)}"></span>`:'')}`,null,'📌',a.p);}).join('')}</div></div>`:''}
+   ${store.custom.length?`<div><div class="upper" style="margin:var(--s2) 0 var(--s3)">Added by you</div><div class="pgrid">${store.custom.map((c,ci)=>{const a=AREA[c.area]||AREA.travel;const d=c.day>=0?DAYS[c.day]:null;return placeCard('c:'+ci,c.name,`${d?`${d.wd} ${d.date} · `:'Not placed · '}${esc(a.label)}${c.who&&PEOPLE[c.who]?` · by ${PEOPLE[c.who].name}`:(c.by?` · <span data-uid="${esc(c.by)}"></span>`:'')}`,c.img?esc(c.img):null,'📌',a.p);}).join('')}</div></div>`:''}
    ${nRemoved&&canRemove()?`<div class="textlinks"><span style="color:var(--sub);font-weight:400">${nRemoved} removed</span><a href="#" data-restore>Restore all</a></div>`:''}
    <h2 style="margin-top:var(--s4)">Heads-up</h2>
    <div class="group cards">${SKIPPED.map(k=>`<div class="kv stack"><span class="k" style="color:var(--ink);font-weight:600"><a class="namelink" target="_blank" rel="noopener" href="${esc(k.u)}">${esc(k.n)}</a></span><span class="v" style="color:var(--sub)">${esc(k.w)}</span></div>`).join('')}</div>
@@ -969,7 +1108,7 @@ function confirmRemove(key){
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>Remove ${esc(name)}?</h2><button class="x" data-close aria-label="Close">✕</button></div>
    <div class="sbody"><p class="note" style="margin:0">It disappears from Explore${when?` and from ${when} in your itinerary`:''}.${di==='c'?'':' You can restore it later from the bottom of Explore.'}</p>
    <button class="btn danger" data-confirm-rm="${key}">Remove</button><button class="btn sec" data-close>Keep it</button></div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');
+  showSheet();
 }
 $('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-confirm-rm]');if(!b)return;const key=b.dataset.confirmRm;const [di,si]=key.split(':');
   if(di==='c'){const c=store.custom[+si];if(c)setRemoved('c:'+c.id,true);closeSheet();renderPlaces();if(c&&c.day>=0)renderDay(c.day);return;}
@@ -1059,7 +1198,7 @@ function avatarHTML(k,size){const p=PEOPLE[k];return `<span class="who-av" style
 function openWho(forced){
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>Who's using the app?</h2>${forced?'':'<button class="x" data-close aria-label="Close">✕</button>'}</div>
    <div class="sbody"><div class="who-grid">${Object.keys(PEOPLE).map(k=>`<button class="who-pick ${who()===k?'on':''}" data-pick="${k}">${avatarHTML(k,72)}<span>${PEOPLE[k].name}</span></button>`).join('')}</div></div>`;
-  $('sheet').classList.add('on');$('backdrop').classList.add('on');$('sheet').dataset.forced=forced?'1':'';
+  showSheet();$('sheet').dataset.forced=forced?'1':'';
 }
 async function pickWho(k){
   const p=PEOPLE[k];
