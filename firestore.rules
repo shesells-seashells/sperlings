@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone who opens the family link signs in anonymously and can use the app.
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
