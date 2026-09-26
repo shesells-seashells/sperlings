@@ -1102,7 +1102,7 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .daymap.locked,.daymap.locked .leaflet-pane,.daymap.locked .leaflet-marker-icon{touch-action:pan-y!important}
 .daymap:not(.locked){touch-action:none}
 .map-hint{position:absolute;left:10px;bottom:10px;z-index:600;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:999px;pointer-events:auto}
-.map-hint.on{background:var(--accent);color:var(--on-accent)}
+.map-hint.on{display:none}
 
 /* day header spacing: dates→title 64, title→text 16, text→stats 40, stats→cards 40 */
 .dayhead{padding:52px 0 40px!important;gap:0!important}
@@ -1119,7 +1119,7 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .maplist .swipe{border-radius:16px}
 .maplist .swipe-front{border-radius:16px}
 /* Google Maps button inside the map */
-.daymap-wrap{position:relative;margin-top:var(--s4)}
+.daymap-wrap{position:relative;margin-top:var(--s4);isolation:isolate;z-index:0}
 .daymap-wrap .daymap{margin-top:0}
 .map-gm{position:absolute;top:10px;left:10px;z-index:600;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center;border-radius:999px;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 
