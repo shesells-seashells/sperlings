@@ -72,16 +72,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .grab::before{content:"";position:absolute;left:50%;top:var(--s2);width:40px;height:5px;margin-left:-20px;border-radius:3px;background:var(--sub);opacity:.45}
 
 /* ---- day strip (inside the sheet) ---- */
-.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}
 .strip-inner{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s2) var(--gutter) var(--s3);scrollbar-width:none}
 .strip-inner::-webkit-scrollbar{display:none}
-.dc{flex:0 0 auto;width:56px;display:grid;justify-items:center;gap:var(--s1)}
-.dc .w{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--sub)}
-.dc .n{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:700;color:var(--accent-text);font-variant-numeric:tabular-nums;transition:background .15s}
+.dc{flex:0 0 auto;width:64px;display:grid;justify-items:center;gap:var(--s1)}
+.dc .w{font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--sub)}
+.dc .n{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:700;color:var(--accent-text);font-variant-numeric:tabular-nums;transition:background .15s}
 .dc[aria-selected="true"] .n{background:var(--accent);color:var(--on-accent)}
 .dc.today .n{box-shadow:inset 0 0 0 2px var(--accent)}
-.dc .dots{display:flex;gap:var(--s1);height:4px}
-.dc .dots i{width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.6}
+.dc .dots{display:flex;gap:var(--s1);height:6px}
+.dc .dots i{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.6}
 .dc.trip .dots i{background:var(--blue)}
 .tabpanel[hidden]{display:none}
 .searchbar{padding:0 var(--gutter) var(--s2)}
@@ -93,17 +93,17 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .empty{color:var(--sub);padding:var(--s6) 0;text-align:center}
 
 /* ---- day header ---- */
-.dayhead{padding:var(--s6) 0 var(--s4);display:grid;gap:var(--s3)}
+.dayhead{padding:var(--s7) 0 var(--s7);display:grid;gap:var(--s7)}
 .dayhead .row{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3)}
 .dayhead h2{font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.05;text-wrap:balance}
 .dayhead .why{color:var(--sub);font-size:16px;margin:0;max-width:60ch}
-.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:var(--s3) 0}
-.meta div{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:var(--s2);align-items:center;padding:0 var(--s2);border-left:1px solid var(--line)}
-.meta div:first-child{padding-left:0;border-left:0}
-.meta .ico{grid-row:span 2;width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center}
-.meta .ico svg{width:24px;height:24px;display:block}
-.meta .upper{font-size:12px;letter-spacing:.04em;white-space:nowrap}
-.meta b{font-size:16px;font-weight:700;color:var(--ink);line-height:1.2}
+.meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:0}
+.meta div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;min-width:0}
+.meta .ico{margin-bottom:var(--s2)}
+.meta .ico{grid-row:span 2;width:32px;height:32px;border-radius:50%;background:var(--line);color:var(--ink);display:grid;place-items:center}
+.meta .ico svg{width:18px;height:18px;display:block}
+.meta .upper{font-size:12px;letter-spacing:.04em;white-space:nowrap;line-height:1.35}
+.meta b{font-size:12px;font-weight:400;color:var(--ink);line-height:1.35}
 .chips{display:flex;gap:var(--s2);flex-wrap:wrap}
 .chipx{font-size:14px;font-weight:600;padding:var(--s1) var(--s3);border-radius:999px;border:1.5px solid var(--ink);color:var(--ink)}
 .chipx.acid{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -183,7 +183,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(-
 .t-booked{background:var(--accent-soft);color:var(--accent-text)}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);font-size:14px;font-weight:600;padding:var(--s3) var(--s4);border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;max-width:calc(100% - 2*var(--gutter));text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.hero #countdown{margin-left:auto}
+
 .who-chip{width:40px;height:40px;border-radius:50%;padding:0;display:grid;place-items:center;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
 .who-av{border-radius:50%;display:grid;place-items:center;color:#111318;font-weight:700;line-height:1}
 .who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);padding-block:var(--s4) var(--s6)}
@@ -274,7 +274,10 @@ label.btn{cursor:pointer}
 .nav button[aria-selected="true"]{color:var(--accent-text)}
 .nav button[aria-selected="true"] .ic-s{display:none}
 .nav button[aria-selected="true"] .ic-f{display:block}
-.nav .theme-nav{display:grid;place-items:center;width:64px;height:48px;color:var(--nav-idle)}
+.nav .me-nav{display:grid;place-items:center;width:64px;height:48px;color:var(--nav-idle);touch-action:none;transition:transform .2s}
+.nav .me-nav .who-av{box-shadow:0 0 0 2px var(--card),0 0 0 3.5px var(--line)}
+.nav .me-nav.bump{transform:translateY(-6px)}
+.nav .me-nav svg{width:26px;height:26px}
 .nav .theme-nav svg{width:26px;height:26px}
 .nav .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
@@ -338,13 +341,33 @@ label.btn{cursor:pointer}
 .sheet.full .sbody{padding-bottom:var(--s6)}
 .sheet.full .sheet-cta{background:var(--bg)}
 html.noscroll,html.noscroll body{overflow:hidden}
+.me-card{display:flex;gap:var(--s4);align-items:center}
+.me-name{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s1);background:var(--fill);border-radius:12px;padding:var(--s1)}
+.seg button{text-align:center;padding:var(--s3) 0;border-radius:8px;font-weight:600;color:var(--sub)}
+.seg button[aria-checked="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.who-row{grid-template-columns:40px minmax(0,1fr) auto!important;grid-template-areas:none!important;align-items:center!important}
+.who-row > *{grid-area:auto!important}
+.who-row .tm{color:var(--accent-text);font-size:18px}
+.sheet.full .who-grid{padding-top:var(--s8)}
+.hero .me-top{width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;touch-action:none;transition:transform .2s}
+.hero .me-top .who-av{box-shadow:0 0 0 2px rgba(255,255,255,.85)}
+.hero .me-top.bump{transform:translateY(-6px)}
+@keyframes meflip{0%{transform:translateY(24px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+.hero .me-top.flip{animation:meflip .35s cubic-bezier(.2,.9,.3,1.3)}
+.hero .me-top svg{width:24px;height:24px;color:#fff}
+.hero{align-items:stretch}
+.hero-titlewrap{margin:auto 0;align-self:center;display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3);padding-bottom:var(--s8)}
+.hero-titlewrap h1{margin:0!important;padding-bottom:0!important}
+.hero .hero-count{align-self:flex-start}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="hero" id="hero">
   <canvas id="skyline"></canvas>
-  <div class="topbar"><button class="who-chip" id="whoChip" hidden aria-label="Switch person"></button><span class="chip" id="countdown">Starts soon</span></div>
-  <h1 id="heroTitle"><span class="l1">Sperlings</span><span class="l2">in London</span></h1>
+  <div class="topbar"><span></span><button class="me-top" id="meBtn" aria-label="Settings and switch person"></button></div>
+  <div class="hero-titlewrap"><h1 id="heroTitle"><span class="l1">Sperlings</span><span class="l2">in London</span></h1>
+  <span class="chip hero-count" id="countdown">Starts soon</span></div>
 </div>
 
 
@@ -372,8 +395,7 @@ html.noscroll,html.noscroll body{overflow:hidden}
   <button role="tab" data-tab="places" aria-selected="false" aria-label="Explore"></button>
   <button role="tab" data-tab="book" aria-selected="false" aria-label="Bookings"></button>
   <button role="tab" data-tab="home" aria-selected="false" aria-label="Home"></button>
-  <button class="theme-nav" id="themeBtn" aria-label="Switch light or dark mode"></button>
-</nav>
+  </nav>
 <button class="fab" id="fab" hidden aria-label="Add a place"></button>
 
 <script>
@@ -403,7 +425,7 @@ const photos = q => 'https://www.google.com/search?tbm=isch&q=' + encodeURICompo
 // ---------- the plan ----------
 // ticket kinds: book (book ahead), free, walk (walk in), table (reserve table), door (pay at door), adult (18+)
 const DAYS = [
-{ date:'30', wd:'Wed', emoji:'✈️', title:'Landing day', area:'wembley', energy:1, homeBy:'Easy evening',
+{ date:'30', wd:'Wed', emoji:'✈️', title:'Landing day', area:'wembley', energy:1, homeBy:'Home ~21:00',
   why:'Flight 6H 115 lands at Luton 16:00. Get home, stock the fridge, see family. Nothing else.',
   stops:[
    {t:'16:00',type:'travel',name:'Land at Luton (LTN)',area:'travel',glyph:'🛬',note:'Bags out by ~16:45. Everyone gets a snack before the train.'},
@@ -520,8 +542,8 @@ const DAYS = [
    {t:'17:15',type:'food',name:'Westfield Stratford: Bunsik corn dog + dinner',area:'east',glyph:'🌭',hours:'Westfield Fri to ~22:00',ticket:'walk',dur:'1h',addr:'Westfield Stratford City, E20 1EJ',note:'Bunsik is in the food court if you missed the corn dog on Tuesday; every chain you could want is around it.',web:'https://www.bunsik.co.uk/locations'},
    {t:'18:20',type:'travel',name:'Stratford → Wembley Park',area:'travel',glyph:'🚇',note:'Jubilee line, one train, ~40 min.'}
   ]},
-{ date:'10', wd:'Sat', emoji:'🏙️', title:'Rooftops, Borough Market and steak', area:'city', energy:2, homeBy:'Home ~19:00 · pack',
-  why:'The City empties on Saturdays: quiet streets, free rooftops, and the market for lunch. Ends with steak and free ice cream in Soho.',
+{ date:'10', wd:'Sat', emoji:'🏙️', title:'Rooftops, Borough Market and steak', area:'city', energy:2, homeBy:'Home ~19:00',
+  why:'The City empties on Saturdays: quiet streets, free rooftops, and the market for lunch. Ends with steak and free ice cream in Soho. Home by 19:00 to pack.',
   stops:[
    {t:'10:00',type:'travel',name:'Wembley Park → London Bridge',area:'travel',glyph:'🚇',note:'Jubilee direct, ~30 min.'},
    {t:'10:45',type:'food',name:'Borough Market: The Black Pig',area:'borough',glyph:'🥖',hours:'Sat 09:00–17:00 (Black Pig) · market 08:00–17:00',ticket:'walk',price:'Ciabatta ~£12',dur:'1h15',addr:'Borough Market Kitchen, 3 Winchester Square, SE1 9BH',note:'Honey-truffle-parmesan slow-roast pork ciabatta, the market\'s most photographed sandwich. Early lunch at 11:00 beats the Saturday crush. Bread Ahead doughnuts for after.',web:'https://boroughmarket.org.uk/traders/the-black-pig/'},
@@ -721,6 +743,7 @@ async function connectShared(){
   db.doc('shared/marks').onSnapshot(s=>{const m=(s.exists&&s.data().marks)||{};Object.keys(store).forEach(k=>{if(MARK_RE.test(k))delete store[k];});Object.entries(m).forEach(([k,v])=>{if(v)store[k]=true;});save();
     if(first.marks){first.marks=false;SH.emptyMarks=!s.exists;maybeOfferImport();}rerender();},()=>{});
   db.doc('locked/removed').onSnapshot(s=>{const m=(s.exists&&s.data().keys)||{};store.removed={};Object.entries(m).forEach(([k,v])=>{if(v)store.removed[k]=true;});refreshCustom();save();rerender();},()=>{});
+  db.doc('shared/avatars').onSnapshot(s=>{const m=(s.exists&&s.data().imgs)||{};store.avatars={};Object.entries(m).forEach(([k,v])=>{if(v)store.avatars[k]=v;});save();applyWho();},()=>{});
   db.doc('shared/edits').onSnapshot(s=>{store.edits=(s.exists&&s.data().edits)||{};save();applyEdits();rerender();},()=>{});
   db.collection('photos').onSnapshot(q=>{store.photos={};q.docs.forEach(d=>{store.photos[d.id]=d.data();});rerender();},()=>{});
   db.collection('places').orderBy('at').onSnapshot(q=>{store.customAll=q.docs.map(d=>Object.assign({id:d.id},d.data()));refreshCustom();save();store.customAll.forEach(c=>{if(!c.img)attachPhoto(c);});
@@ -809,11 +832,11 @@ const $ = id => document.getElementById(id);
 
 // theme toggle
 (function(){
-  const root=document.documentElement; const b=$('themeBtn');
-  const apply=v=>{ if(v) root.setAttribute('data-theme',v); else root.removeAttribute('data-theme'); if(window.redrawHero) window.redrawHero(); b.innerHTML = (v==='dark'||(!v&&matchMedia('(prefers-color-scheme: dark)').matches)) ? ICON.sun : ICON.moon; };
+  const root=document.documentElement;
+  const apply=v=>{ if(v) root.setAttribute('data-theme',v); else root.removeAttribute('data-theme'); if(window.redrawHero) window.redrawHero(); };
+  window.applyTheme=apply;
   let saved=null; try{saved=localStorage.getItem('ldo-theme')}catch(e){}
   apply(saved);
-  b.addEventListener('click',()=>{const dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);const v=dark?'light':'dark';try{localStorage.setItem('ldo-theme',v)}catch(e){};apply(v);});
 })();
 document.querySelectorAll('.nav [data-tab]').forEach(b=>{const k=b.dataset.tab;b.innerHTML=`<span class="ic-s">${NAV[k][0]}</span><span class="ic-f">${NAV[k][1]}</span><span class="sr">${b.getAttribute('aria-label')}</span>`;});
 
@@ -888,7 +911,7 @@ function renderStrip(){
   const ti=todayIndex();
   $('stripInner').innerHTML = DAYS.map((d,i)=>{
     const n=d.stops.filter(s=>s.ticket==='book'||s.ticket==='table').length;
-    return `<button class="dc ${d.trip?'trip':''} ${i===ti?'today':''}" role="tab" aria-selected="false" data-day="${i}"><span class="w">${d.wd.toUpperCase()}</span><span class="n">${d.date}</span><span class="dots">${'<i></i>'.repeat(Math.min(n,3))}</span></button>`;
+    return `<button class="dc ${d.trip?'trip':''} ${i===ti?'today':''}" role="tab" aria-selected="false" data-day="${i}"><span class="w">${d.wd.toUpperCase()}</span><span class="n">${d.date}</span></button>`;
   }).join('');
   $('stripInner').addEventListener('click',e=>{const b=e.target.closest('[data-day]');if(!b)return;if(Q){Q='';$('q').value='';}const up=sheetUp();renderDay(+b.dataset.day);showTab('plan');if(up)window.scrollTo({top:sheetTop()});});
 }
@@ -936,7 +959,7 @@ function renderDay(i){
   $('panel-plan').innerHTML = `<div class="dayhead">
     <h2>${esc(d.title)}</h2>
     <p class="why">${esc(d.why)}</p>
-    <div class="meta"><div><span class="ico">${ILL.pace}</span><span class="upper">Pace</span><b>${['','Gentle','Steady','Big day'][d.energy]}${d.trip?' · trip':''}</b></div><div><span class="ico">${ILL.back}</span><span class="upper">Back</span><b>${esc(d.homeBy.replace('Home ','').replace('Leave ','leave '))}</b></div><div><span class="ico">${ILL.book}</span><span class="upper">To book</span><b>${booked||'Nothing'}</b></div></div>
+    <div class="meta"><div><span class="ico">${ILL.pace}</span><span class="upper">Pace</span><b>${['','Gentle','Steady','Big day'][d.energy]}</b></div><div><span class="ico">${ILL.back}</span><span class="upper">${/^Leave/.test(d.homeBy)?'Leave':'Back'}</span><b>${esc(d.homeBy.replace(/^(Home|Leave)\s*/,''))}</b></div><div><span class="ico">${ILL.book}</span><span class="upper">To book</span><b>${booked||'None'}</b></div></div>
   </div>
   <div class="group cards">${dayStops(i).map(s=>s.custom?rowHTML(s,'c',s._ci):rowHTML(s,i,s._si)).join('')}</div>
   <div class="note" style="padding:0 0 var(--s2)">Tap a stop for details. Swipe left and snap a photo to mark it done.</div>`;
@@ -995,18 +1018,20 @@ function openSheet(di,si){
 }
 let fullY=0,fullOpen=false;
 const XBIG='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+function fixFullHeader(sh){
+  const hd=sh.querySelector('.sh');if(!hd)return;
+  const x=hd.querySelector('[data-close],[data-back]');const more=hd.querySelector('.more-wrap');const h2=hd.querySelector('h2');
+  const bar=document.createElement('div');bar.className='fbar';
+  if(x){const xb=document.createElement('button');xb.className='fx';if(x.hasAttribute('data-back'))xb.setAttribute('data-back','');else xb.setAttribute('data-close','');xb.setAttribute('aria-label',x.getAttribute('aria-label')||'Close');xb.innerHTML=XBIG;bar.appendChild(xb);}else{bar.appendChild(document.createElement('span'));}
+  if(more){if(x&&more.contains(x))x.remove();more.classList.add('fmore');bar.appendChild(more);}
+  const th=document.createElement('div');th.className='ftitle';if(h2)th.appendChild(h2);
+  hd.replaceWith(bar);bar.after(th);const hn=sh.querySelector('.handle');if(hn)hn.remove();}
 function showSheet(full){
   const sh=$('sheet');
   if(full){
     if(!fullOpen){fullY=window.scrollY;fullOpen=true;try{history.pushState({sp:'detail'},'');}catch(e){}}
     sh.classList.add('full');
-    const hd=sh.querySelector('.sh');
-    if(hd){const x=hd.querySelector('[data-close]');const more=hd.querySelector('.more-wrap');const h2=hd.querySelector('h2');
-      const bar=document.createElement('div');bar.className='fbar';
-      const xb=document.createElement('button');xb.className='fx';xb.setAttribute('data-close','');xb.setAttribute('aria-label','Close');xb.innerHTML=XBIG;bar.appendChild(xb);
-      if(more){if(x&&more.contains(x))x.remove();more.classList.add('fmore');bar.appendChild(more);}
-      const th=document.createElement('div');th.className='ftitle';if(h2)th.appendChild(h2);
-      hd.replaceWith(bar);bar.after(th);}
+    fixFullHeader(sh);
     const hn=sh.querySelector('.handle');if(hn)hn.remove();
     document.documentElement.classList.add('noscroll');
   }else{
@@ -1194,20 +1219,23 @@ $('onbSkip').addEventListener('click',closeOnb);
 async function sha(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('sperlings:'+s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}catch(e){return 'x'+s;}}
 async function getPinHash(){if(SH.db){try{const s=await SH.db.doc('locked/settings').get();if(s.exists&&s.data().pinHash)return s.data().pinHash;}catch(e){}}return store.pinHash||null;}
 async function savePinHash(hash){store.pinHash=hash;save();if(SH.db){try{await upsert('locked/settings',{pinHash:hash});}catch(e){}}}
-function avatarHTML(k,size){const p=PEOPLE[k];return `<span class="who-av" style="background:${p.color};width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px">${p.name[0]}</span>`;}
+store.avatars=store.avatars||{};
+function avatarHTML(k,size){const p=PEOPLE[k];const img=store.avatars[k];return `<span class="who-av" style="background:${p.color}${img?`;background-image:url(${img});background-size:cover;background-position:center`:''};width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px">${img?'':p.name[0]}</span>`;}
 function openWho(forced){
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>Who's using the app?</h2>${forced?'':'<button class="x" data-close aria-label="Close">✕</button>'}</div>
    <div class="sbody"><div class="who-grid">${Object.keys(PEOPLE).map(k=>`<button class="who-pick ${who()===k?'on':''}" data-pick="${k}">${avatarHTML(k,72)}<span>${PEOPLE[k].name}</span></button>`).join('')}</div></div>`;
-  showSheet();$('sheet').dataset.forced=forced?'1':'';
+  showSheet(true);$('sheet').dataset.forced=forced?'1':'';
 }
 async function pickWho(k){
   const p=PEOPLE[k];
   if(p.kid||who()===k||(who()&&!PEOPLE[who()].kid&&!p.kid)){setWho(k);return;}
   const existing=await getPinHash();
+  if(!$('sheet').classList.contains('on')){$('sheet').innerHTML='<div class="sh"><h2></h2></div>';showSheet(true);}
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>${existing?`Hi ${p.name}`:'Create a parents’ PIN'}</h2><button class="x" data-back aria-label="Back">✕</button></div>
    <div class="sbody"><p class="note" style="margin:0">${existing?'Enter the parents’ PIN.':'Ziv and Michele use this 4-digit PIN. You only set it once, and it works on every phone.'}</p>
    <div class="field"><label for="pinIn">PIN</label><input id="pinIn" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" type="password"></div>
    <div id="pinErr" class="note" style="color:var(--red);margin:0" hidden></div><button class="btn" id="pinGo">Continue</button></div>`;
+  if($('sheet').classList.contains('full'))fixFullHeader($('sheet'));
   setTimeout(()=>$('pinIn').focus(),250);
   $('pinGo').addEventListener('click',async()=>{const v=$('pinIn').value.trim();const err=$('pinErr');
     if(!/^\d{4}$/.test(v)){err.hidden=false;err.textContent='Use 4 digits.';return;}
@@ -1216,11 +1244,49 @@ async function pickWho(k){
     if(!existing)await savePinHash(hv);
     setWho(k);});
 }
-function setWho(k){store.who=k;save();$('sheet').dataset.forced='';closeSheet();applyWho();rerender();toast(`Hi ${PEOPLE[k].name}!`);}
-function applyWho(){document.documentElement.classList.toggle('kidmode',kidMode());const c=$('whoChip');if(c){const k=who();c.innerHTML=k?avatarHTML(k,32):'';c.hidden=!k;}}
+function setWho(k){store.who=k;save();$('sheet').dataset.forced='';const from=pickWho._from;pickWho._from='';applyWho();rerender();toast(`Hi ${PEOPLE[k].name}!`);if(from==='settings')openSettings();else closeSheet();}
+function applyWho(){document.documentElement.classList.toggle('kidmode',kidMode());const b=$('meBtn');if(b){const k=who();b.innerHTML=k?avatarHTML(k,40):ICON.home;}}
+// ---------- settings ----------
+function curTheme(){try{return localStorage.getItem('ldo-theme')||'system'}catch(e){return 'system'}}
+function setTheme(v){try{if(v==='system')localStorage.removeItem('ldo-theme');else localStorage.setItem('ldo-theme',v)}catch(e){}window.applyTheme(v==='system'?null:v);}
+function openSettings(){const k=who();
+  $('sheet').innerHTML=`<div class="sh"><h2>Settings</h2><button class="x" data-close aria-label="Close">✕</button></div>
+   <div class="sbody">
+    <div class="me-card">${k?avatarHTML(k,96):''}<div><div class="upper">Using the app as</div><div class="me-name">${k?PEOPLE[k].name:'—'}</div>
+      <label class="textlinks" style="margin-top:var(--s2);cursor:pointer"><a>Change photo</a><input type="file" accept="image/*" id="avIn" hidden></label>${k&&store.avatars[k]?'<div class="textlinks"><a href="#" data-av-rm>Remove photo</a></div>':''}</div></div>
+    <div><div class="upper" style="margin-bottom:var(--s3)">Appearance</div>
+     <div class="seg" role="radiogroup">${[['light','Light'],['dark','Dark'],['system','Auto']].map(([v,l])=>`<button role="radio" aria-checked="${curTheme()===v}" data-theme-pick="${v}">${l}</button>`).join('')}</div></div>
+    <div><div class="upper" style="margin-bottom:var(--s3)">Switch person</div>
+     <div class="group cards">${Object.keys(PEOPLE).map(p=>`<button class="row-item who-row" data-switch="${p}">${avatarHTML(p,40)}<span><div class="tt">${PEOPLE[p].name}</div><div class="st">${PEOPLE[p].kid?'Can add places and finish stops':'Parent · can edit and remove'}</div></span><span class="tm">${who()===p?'✓':''}</span></button>`).join('')}</div>
+     <p class="note" style="margin:var(--s3) 0 0">Tip: swipe down on your picture at the top to jump to the next person.</p></div>
+    <div class="textlinks"><a href="#" data-guide2>See the quick guide again</a></div>
+   </div>`;
+  showSheet(true);
+  $('avIn').addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];if(!f||!k)return;try{const d=await shrinkSq(f,240);store.avatars[k]=d;save();applyWho();openSettings();if(SH.db)upsert('shared/avatars',{imgs:{[k]:d}}).catch(()=>{});toast('Photo updated');}catch(err){toast('That photo could not be used');}});
+}
+async function shrinkSq(file,size){const url=URL.createObjectURL(file);try{const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
+  const s=Math.min(img.width,img.height);const c=document.createElement('canvas');c.width=c.height=size;c.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,size,size);return c.toDataURL('image/jpeg',.8);}finally{URL.revokeObjectURL(url);}}
+$('sheet').addEventListener('click',e=>{
+  const tp=e.target.closest('[data-theme-pick]');if(tp){setTheme(tp.dataset.themePick);$('sheet').querySelectorAll('[data-theme-pick]').forEach(b=>b.setAttribute('aria-checked',String(b===tp)));return;}
+  const sw=e.target.closest('[data-switch]');if(sw){pickWho._from='settings';pickWho(sw.dataset.switch);return;}
+  if(e.target.closest('[data-av-rm]')){e.preventDefault();const k=who();delete store.avatars[k];save();applyWho();if(SH.db)upsert('shared/avatars',{imgs:{[k]:''}}).catch(()=>{});openSettings();return;}
+  if(e.target.closest('[data-guide2]')){e.preventDefault();closeSheet();setTimeout(openOnb,340);}
+});
+// Gmail-style: swipe DOWN on avatar to switch person, tap opens settings
+(function(){const b=$('meBtn');let y0=null,x0=0,dy=0,moved=false;
+  const start=(y,x)=>{y0=y;x0=x;dy=0;moved=false;b.style.transition='none';};
+  const move=(y,x,e)=>{if(y0===null)return;dy=Math.max(0,y-y0);if(dy>6||Math.abs(x-x0)>6)moved=true;if(e&&e.cancelable)e.preventDefault();b.style.transform=`translateY(${Math.min(dy,40)}px) rotate(${Math.min(dy,40)*2}deg)`;};
+  const end=()=>{if(y0===null)return;b.style.transition='';b.style.transform='';
+    if(dy>24){const ks=Object.keys(PEOPLE);const i=Math.max(0,ks.indexOf(who()));const next=ks[(i+1)%ks.length];pickWho._from='swipe';pickWho(next);b.classList.add('flip');setTimeout(()=>b.classList.remove('flip'),350);if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}}
+    y0=null;};
+  b.addEventListener('touchstart',e=>start(e.touches[0].clientY,e.touches[0].clientX),{passive:true});
+  b.addEventListener('touchmove',e=>move(e.touches[0].clientY,e.touches[0].clientX,e),{passive:false});
+  b.addEventListener('touchend',end);b.addEventListener('touchcancel',end);
+  b.addEventListener('mousedown',e=>{start(e.clientY,e.clientX);const mm=ev=>move(ev.clientY,ev.clientX);const mu=()=>{end();removeEventListener('mousemove',mm);removeEventListener('mouseup',mu);};addEventListener('mousemove',mm);addEventListener('mouseup',mu);});
+  b.addEventListener('click',e=>{if(moved){moved=false;e.preventDefault();return;}openSettings();});
+})();
 $('panel-home').addEventListener('click',e=>{if(e.target.closest('[data-who]'))openWho(false);const g=e.target.closest('[data-guide]');if(g){e.preventDefault();openOnb();}});
-$('whoChip').addEventListener('click',()=>openWho(false));
-$('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b){pickWho(b.dataset.pick);return;}if(e.target.closest('[data-back]'))openWho(!who());});
+$('sheet').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b){pickWho(b.dataset.pick);return;}if(e.target.closest('[data-back]')){if(pickWho._from==='settings')openSettings();else openWho(!who());}});
 
 
 // ---------- tabs ----------
