@@ -1099,7 +1099,10 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .group.cards .row-item.travel .tt{font-weight:600;color:var(--sub)}
 .mbody{gap:2px}
 .mt{font-size:16px;line-height:1.3}
-.daymap .leaflet-container{touch-action:pan-y pinch-zoom}
+.daymap.locked,.daymap.locked .leaflet-pane,.daymap.locked .leaflet-marker-icon{touch-action:pan-y!important}
+.daymap:not(.locked){touch-action:none}
+.map-hint{position:absolute;left:10px;bottom:10px;z-index:600;font-size:12px;font-weight:600;color:#fff;background:rgba(0,0,0,.45);padding:6px 10px;border-radius:999px;pointer-events:auto}
+.map-hint.on{background:var(--accent);color:var(--on-accent)}
 
 /* day header spacing: dates→title 64, title→text 16, text→stats 40, stats→cards 40 */
 .dayhead{padding:52px 0 40px!important;gap:0!important}
@@ -1161,9 +1164,9 @@ html.noscroll,html.noscroll body{overflow:hidden}
 .mlabel span{display:block;text-align:center;font:600 11px/16px 'IBM Plex Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 
 /* day strip: idle days smaller, selected day keeps full size */
-.dc .w{font-size:14px;opacity:0;transition:opacity .15s}
+.dc .w{font-size:14px;visibility:hidden}
 .dc .n{font-size:19px;transition:font-size .15s,background .15s}
-.dc[aria-selected="true"] .w{opacity:1;color:var(--ink)}
+.dc[aria-selected="true"] .w{visibility:visible;color:var(--ink)}
 .dc[aria-selected="true"] .n{font-size:26px}
 
 /* soft, slow heartbeat on the selected date */
@@ -1944,6 +1947,17 @@ function drawDayMap(i){const el=$('dayMap');if(!el||!window.L||el._leaflet_id)re
   if(near)L.marker(HOME_LL,{icon:L.divIcon({className:'mpin home',html:ILL.back,iconSize:[30,30],iconAnchor:[15,15]}),title:'Home'}).addTo(m);
   if(line.length===1)m.setView(line[0],15);else if(line.length)m.fitBounds(line,{padding:[36,36],maxZoom:16});else m.setView(HOME_LL,12);
   L.control.zoom({position:'topright'}).addTo(m);
+  if(touch){ // tap the map to move it; page scroll wins until then
+    el.classList.add('locked');
+    const hint=document.createElement('div');hint.className='map-hint';hint.textContent='Tap to move the map';el.parentElement.appendChild(hint);
+    const unlock=()=>{if(!el.classList.contains('locked'))return;el.classList.remove('locked');m.dragging.enable();m.touchZoom.enable();hint.textContent='Moving the map · tap outside to scroll';hint.classList.add('on');};
+    const lock=()=>{if(el.classList.contains('locked'))return;el.classList.add('locked');m.dragging.disable();m.touchZoom.disable();hint.textContent='Tap to move the map';hint.classList.remove('on');};
+    m.on('click',unlock);hint.addEventListener('click',unlock);m.on('zoomend',()=>{if(el.classList.contains('locked')&&m.getZoom()>(m._startZ||0))unlock();});
+    setTimeout(()=>{m._startZ=m.getZoom();},50);
+    const out=e=>{if(!e.target.closest||!e.target.closest('.daymap-wrap'))lock();};
+    document.addEventListener('touchstart',out,{passive:true});
+    m.on('unload',()=>document.removeEventListener('touchstart',out));
+  }
 }
 const PILL_ICO={map:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.5 3.2 3.7 5A1 1 0 0 0 3 6v13.6a.8.8 0 0 0 1.1.7l4.4-1.7zM10 3.2v15.4l5.5 2.2V5.4zM17 5.4v15.4l4.3-1.8a1 1 0 0 0 .7-.9V4.4a.8.8 0 0 0-1.1-.7z"/></svg>',list:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4.5" width="3" height="3" rx="1"/><rect x="3" y="10.5" width="3" height="3" rx="1"/><rect x="3" y="16.5" width="3" height="3" rx="1"/><rect x="8.5" y="5" width="12.5" height="2" rx="1"/><rect x="8.5" y="11" width="12.5" height="2" rx="1"/><rect x="8.5" y="17" width="12.5" height="2" rx="1"/></svg>'};
 function setViewPill(){const p=$('viewPill');if(!p)return;const toMap=store.view==='list';p.innerHTML=(toMap?PILL_ICO.map:PILL_ICO.list)+`<span>${toMap?'Map':'List'}</span>`;p.setAttribute('aria-label',toMap?'Show the day on a map':'Show the day as a list');}
