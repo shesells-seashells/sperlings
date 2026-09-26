@@ -1176,6 +1176,9 @@ html.noscroll,html.noscroll body{overflow:hidden}
  100%{transform:scale(1);box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 0%,transparent)}}
 .dc[aria-selected="true"] .n{animation:dayBeat 2.8s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.dc[aria-selected="true"] .n{animation:none}}
+
+.guest-av{display:grid!important;place-items:end center;overflow:hidden;background:#C9D2CD!important;color:#F4F7F5}
+.guest-av svg{width:86%!important;height:86%!important;margin-bottom:-12%;flex:0 0 auto}
 </style>
 
 <div class="hero" id="hero">
@@ -2252,6 +2255,7 @@ async function sha(s){try{const b=await crypto.subtle.digest('SHA-256',new TextE
 async function getPinHash(){if(SH.db){try{const s=await SH.db.doc('locked/settings').get();if(s.exists&&s.data().pinHash)return s.data().pinHash;}catch(e){}}return store.pinHash||null;}
 async function savePinHash(hash){store.pinHash=hash;save();if(SH.db){try{await upsert('locked/settings',{pinHash:hash});}catch(e){}}}
 store.avatars=store.avatars||{};
+function guestAvatar(size){return `<span class="who-av guest-av" style="width:${size}px;height:${size}px"><svg viewBox="0 0 24 24" fill="currentColor" width="${Math.round(size*.86)}" height="${Math.round(size*.86)}"><circle cx="12" cy="8.2" r="4.2"/><path d="M3.8 21c.6-4.4 4-7.2 8.2-7.2s7.6 2.8 8.2 7.2z"/></svg></span>`;}
 function avatarHTML(k,size){const p=PEOPLE[k];const img=store.avatars[k]||(typeof DEFAULT_AV!=='undefined'&&DEFAULT_AV[k])||'';return `<span class="who-av" style="background:${p.color}${img?`;background-image:url(${img});background-size:cover;background-position:center`:''};width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px">${img?'':p.name[0]}</span>`;}
 function openWho(forced,parentsOnly){
   $('sheet').innerHTML=`<div class="handle"></div><div class="sh"><h2>${parentsOnly?'Grown-ups only':'Who\'s using the app?'}</h2>${forced?'':'<button class="x" data-close aria-label="Close">✕</button>'}</div>
@@ -2278,15 +2282,15 @@ async function pickWho(k){
 }
 function setWho(k){store.who=k;save();$('sheet').dataset.forced='';const from=pickWho._from;pickWho._from='';applyWho();rerender();toast(`Hi ${PEOPLE[k].name}!`);const after=pickWho._after;pickWho._after=null;if(from==='settings')openSettings();else if(after&&isParent())after();else closeSheet();}
 function gateParent(fn){if(isParent()){fn();return;}pickWho._after=fn;pickWho._from='';openWho(false,true);if(!$('sheet').classList.contains('on'))showSheet(true);}
-function applyWho(){document.documentElement.classList.toggle('kidmode',kidMode());const b=$('meBtn');if(b){const k=who();b.innerHTML=k?avatarHTML(k,40):ICON.home;}}
+function applyWho(){document.documentElement.classList.toggle('kidmode',kidMode());const b=$('meBtn');if(b){const k=who();b.innerHTML=k?avatarHTML(k,40):guestAvatar(40);}}
 // ---------- settings ----------
 function curTheme(){try{return localStorage.getItem('ldo-theme')||'system'}catch(e){return 'system'}}
 function setTheme(v){try{if(v==='system')localStorage.removeItem('ldo-theme');else localStorage.setItem('ldo-theme',v)}catch(e){}window.applyTheme(v==='system'?null:v);}
 function openSettings(){const k=who();
   $('sheet').innerHTML=`<div class="sh"><h2>Settings</h2><button class="x" data-close aria-label="Close">✕</button></div>
    <div class="sbody">
-    <div class="me-card">${k?avatarHTML(k,96):''}<div><div class="upper">Using the app as</div><div class="me-name">${k?PEOPLE[k].name:'—'}</div>
-      <label class="textlinks" style="margin-top:var(--s2);cursor:pointer"><a>Change photo</a><input type="file" accept="image/*" id="avIn" hidden></label>${k&&store.avatars[k]?'<div class="textlinks"><a href="#" data-av-rm>Remove photo</a></div>':''}</div></div>
+    <div class="me-card">${k?avatarHTML(k,96):guestAvatar(96)}<div><div class="upper">Using the app as</div><div class="me-name">${k?PEOPLE[k].name:'Guest'}</div>
+      ${k?`<label class="textlinks" style="margin-top:var(--s2);cursor:pointer"><a>Change photo</a><input type="file" accept="image/*" id="avIn" hidden></label>`:`<div class="textlinks" style="margin-top:var(--s2)"><a href="#" data-who-pick>Choose who you are</a></div><input type="file" id="avIn" hidden>`}${k&&store.avatars[k]?'<div class="textlinks"><a href="#" data-av-rm>Remove photo</a></div>':''}</div></div>
     <div><div class="upper" style="margin-bottom:var(--s3)">Appearance</div>
      <div class="seg" role="radiogroup">${[['light','Light'],['dark','Dark'],['system','Auto']].map(([v,l])=>`<button role="radio" aria-checked="${curTheme()===v}" data-theme-pick="${v}">${l}</button>`).join('')}</div></div>
     <div class="textlinks"><a href="#" data-guide2>See the quick guide again</a></div>
@@ -2300,6 +2304,7 @@ $('sheet').addEventListener('click',e=>{
   const tp=e.target.closest('[data-theme-pick]');if(tp){setTheme(tp.dataset.themePick);$('sheet').querySelectorAll('[data-theme-pick]').forEach(b=>b.setAttribute('aria-checked',String(b===tp)));return;}
   const sw=e.target.closest('[data-switch]');if(sw){pickWho._from='settings';pickWho(sw.dataset.switch);return;}
   if(e.target.closest('[data-av-rm]')){e.preventDefault();const k=who();delete store.avatars[k];save();applyWho();if(SH.db)upsert('shared/avatars',{imgs:{[k]:''}}).catch(()=>{});openSettings();return;}
+  if(e.target.closest('[data-who-pick]')){e.preventDefault();pickWho._from='settings';openWho(false);return;}
   if(e.target.closest('[data-guide2]')){e.preventDefault();closeSheet();setTimeout(openOnb,340);}
 });
 // Gmail-style: swipe DOWN on avatar to switch person, tap opens settings
