@@ -1118,7 +1118,7 @@ html.noscroll,html.noscroll body{overflow:hidden}
 /* Google Maps button inside the map */
 .daymap-wrap{position:relative;margin-top:var(--s4)}
 .daymap-wrap .daymap{margin-top:0}
-.map-gm{position:absolute;top:10px;right:52px;z-index:600;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center;border-radius:999px;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.map-gm{position:absolute;top:10px;left:10px;z-index:600;background:var(--card);color:var(--ink);font-size:13px;font-weight:600;padding:0 12px;height:34px;display:flex;align-items:center;border-radius:999px;text-decoration:none;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 
 .who-dd{position:relative;display:inline-block}
 .dd-caret{font-size:11px;margin-left:2px}
@@ -1156,6 +1156,23 @@ html.noscroll,html.noscroll body{overflow:hidden}
 /* onboarding is always dark */
 .onb{--accent-text:#E6FF5C;--link:#F3F5FA;--link-line:#F3F5FA;--bg:#0B0E17;--card:#161A26;--ink:#F3F5FA;--sub:#9AA0B4;--line:#262B3A;--fill:#202535;--accent:#E6FF5C;--accent-soft:#2E3614;--on-accent:#0B0E17;--acid:#E6FF5C;--acid-ink:#0B0E17;--acid-text:#E6FF5C;--green-soft:#153524;--red-soft:#3D1D1F;--purple-soft:#2B2144;color-scheme:dark;color:var(--ink);background:var(--bg)!important}
 .onb .mini-london{color:#C8F5D6!important}
+
+.mlabel{pointer-events:none}
+.mlabel span{display:block;text-align:center;font:600 11px/16px 'IBM Plex Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+
+/* day strip: idle days smaller, selected day keeps full size */
+.dc .w{font-size:14px;opacity:0;transition:opacity .15s}
+.dc .n{font-size:19px;transition:font-size .15s,background .15s}
+.dc[aria-selected="true"] .w{opacity:1;color:var(--ink)}
+.dc[aria-selected="true"] .n{font-size:26px}
+
+/* soft, slow heartbeat on the selected date */
+@keyframes dayBeat{0%{transform:scale(1);box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent)}
+ 8%{transform:scale(1.06)}14%{transform:scale(1)}22%{transform:scale(1.04)}
+ 40%{transform:scale(1);box-shadow:0 0 0 8px color-mix(in srgb,var(--accent) 0%,transparent)}
+ 100%{transform:scale(1);box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 0%,transparent)}}
+.dc[aria-selected="true"] .n{animation:dayBeat 2.8s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.dc[aria-selected="true"] .n{animation:none}}
 </style>
 
 <div class="hero" id="hero">
@@ -1897,11 +1914,29 @@ function mapViewHTML(i){const pts=mapStops(i);
   <div class="group cards maplist">${(()=>{const lg=mapLegs(i);return pts.map((s,n)=>{const id=`d${i}s${s._si}`;const done=!s.custom&&!!store[id];const can=!s.custom;
     const btn=`<button class="mrow ${done?'is-done':''} ${can?'swipe-front':''}" data-open="${s.custom?'c:'+s._ci:i+':'+s._si}" ${can?`data-swipe="${id}" data-kind="stop"`:''}><span class="mnum">${n+1}</span><span class="mbody"><span class="mt tt">${esc(s.name)}</span><span class="ms">${esc(s.t)}${s.hood?' · '+esc(s.hood):''}${s.ll?'':' · not on the map'}</span></span>${s.custom?'':stopBadge(s,i,s._si)}<span class="chev">›</span></button>`;
     return (lg[s.custom?'c'+s._ci:s._si]||'')+(can?`<div class="swipe"><div class="swipe-act">${done?'Undo':'Done ✓'}</div>${btn}</div>`:btn);}).join('');})()}</div>`;}
+
+// ---------- simple hand-drawn London base map (no tiles, no API keys) ----------
+const THAMES=[[51.448,-0.312],[51.459,-0.307],[51.470,-0.299],[51.483,-0.287],[51.487,-0.262],[51.488,-0.228],[51.470,-0.216],[51.461,-0.192],[51.474,-0.178],[51.482,-0.170],[51.485,-0.155],[51.487,-0.125],[51.500,-0.122],[51.508,-0.117],[51.509,-0.104],[51.507,-0.088],[51.505,-0.075],[51.503,-0.050],[51.508,-0.035],[51.498,-0.027],[51.486,-0.018],[51.484,-0.006],[51.492,0.001],[51.504,0.004],[51.507,0.012],[51.500,0.024],[51.496,0.070]];
+const PARKS=[
+ [[51.512,-0.190],[51.512,-0.152],[51.502,-0.152],[51.502,-0.190]],
+ [[51.533,-0.160],[51.533,-0.146],[51.522,-0.146],[51.522,-0.160]],
+ [[51.455,-0.285],[51.452,-0.240],[51.428,-0.240],[51.418,-0.270],[51.430,-0.300]],
+ [[51.481,-0.005],[51.479,0.005],[51.473,0.004],[51.474,-0.008]],
+ [[51.572,-0.182],[51.570,-0.155],[51.555,-0.150],[51.556,-0.176]],
+ [[51.505,-0.207],[51.505,-0.200],[51.500,-0.200],[51.500,-0.207]],
+ [[51.506,-0.147],[51.505,-0.128],[51.501,-0.128],[51.500,-0.147]],
+ [[51.550,-0.022],[51.550,-0.010],[51.536,-0.008],[51.536,-0.020]]];
+const PLACE_LABELS=[['Wembley',51.556,-0.280],['Hampstead',51.558,-0.172],['Kensington',51.499,-0.192],['Westminster',51.497,-0.133],['Soho',51.514,-0.134],['The City',51.515,-0.090],['Shoreditch',51.525,-0.078],['Greenwich',51.478,-0.012],['Stratford',51.543,-0.004],['Richmond',51.461,-0.300],['Thames',51.491,-0.140]];
+function drawLondonBase(m,dark){
+  const park=dark?'#173826':'#2E5A41',river=dark?'#1C4A5E':'#3F7A8C',label=dark?'rgba(200,245,214,.55)':'rgba(227,244,233,.7)';
+  PARKS.forEach(p=>L.polygon(p,{stroke:false,fillColor:park,fillOpacity:1,interactive:false}).addTo(m));
+  L.polyline(THAMES,{color:river,weight:14,opacity:1,lineCap:'round',lineJoin:'round',interactive:false}).addTo(m);
+  PLACE_LABELS.forEach(([n,a,b])=>L.marker([a,b],{interactive:false,zIndexOffset:-1000,icon:L.divIcon({className:'mlabel',html:`<span style="color:${label}">${n}</span>`,iconSize:[100,16],iconAnchor:[50,8]})}).addTo(m));
+}
 function drawDayMap(i){const el=$('dayMap');if(!el||!window.L||el._leaflet_id)return;el.innerHTML='';
   const dark=document.documentElement.getAttribute('data-theme')==='dark'||(!document.documentElement.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
-  const touch=L.Browser.touch&&matchMedia('(pointer:coarse)').matches;const m=L.map(el,{zoomControl:false,attributionControl:true,scrollWheelZoom:false,dragging:!touch,touchZoom:!touch,doubleClickZoom:true,tap:true});window._lmap=m;
-  const tl=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(m);
-  let errs=0;tl.on('tileerror',()=>{if(++errs===3)el.classList.add('notiles');});
+  const touch=L.Browser.touch&&matchMedia('(pointer:coarse)').matches;const m=L.map(el,{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:!touch,touchZoom:!touch,doubleClickZoom:true,tap:true});window._lmap=m;
+  drawLondonBase(m,dark);
   const pts=mapStops(i).filter(s=>s.ll);const all=mapStops(i);
   const line=pts.map(s=>s.ll);if(line.length>1)L.polyline(line,{color:dark?'#E6FF5C':'#C8F5D6',weight:3,opacity:.8,dashArray:'6 8'}).addTo(m);
   all.forEach((s,n)=>{if(!s.ll)return;L.marker(s.ll,{icon:L.divIcon({className:'mpin',html:`<span>${n+1}</span>`,iconSize:[30,30],iconAnchor:[15,15]}),title:s.name}).addTo(m).on('click',()=>{if(s.custom)openCustom(s._ci);else openSheet(i,s._si);});});
