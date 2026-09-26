@@ -1949,7 +1949,7 @@ function drawDayMap(i){const el=$('dayMap');if(!el||!window.L||el._leaflet_id)re
   L.control.zoom({position:'topright'}).addTo(m);
   if(touch){ // tap the map to move it; page scroll wins until then
     el.classList.add('locked');
-    const hint=document.createElement('div');hint.className='map-hint';hint.textContent='Tap to move the map';el.parentElement.appendChild(hint);
+    const hint=document.createElement('div');
     const unlock=()=>{if(!el.classList.contains('locked'))return;el.classList.remove('locked');m.dragging.enable();m.touchZoom.enable();hint.textContent='Moving the map · tap outside to scroll';hint.classList.add('on');};
     const lock=()=>{if(el.classList.contains('locked'))return;el.classList.add('locked');m.dragging.disable();m.touchZoom.disable();hint.textContent='Tap to move the map';hint.classList.remove('on');};
     m.on('click',unlock);hint.addEventListener('click',unlock);m.on('zoomend',()=>{if(el.classList.contains('locked')&&m.getZoom()>(m._startZ||0))unlock();});
